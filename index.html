@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Food Khmer • Food Order Website</title>
+
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <!-- Change text/logo as you want -->
+        <h1>Food Khmer</h1>
+        <p class="tag">ឆ្លងចូល💙 QuickBite • សាច់ឆ្ងាញ់</p>
+      </div>
+
+      <nav class="nav">
+        <button id="btn-home" class="nav-btn">Home / ទំព័រដើម</button>
+        <button id="btn-menu" class="nav-btn">Menu / មឺនុយ</button>
+        <button id="btn-cart" class="nav-btn">Cart / កន្ត្រក (<span id="cart-count">0</span>)</button>
+        <button id="btn-logout" class="nav-btn hidden">Logout / ចាកចេញ</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay">
+        <h2>Delicious food • ភ្លំស្រស់ចិត្ត</h2>
+        <p>Order fast — បញ្ជាទិញយ៉ាងមានសុវត្ថិភាព</p>
+        <div class="hero-actions">
+          <button class="btn primary" id="hero-shop">Shop / ទិញឥឡូវ</button>
+          <button class="btn ghost" id="hero-auth">Register / ចុះឈ្មោះ</button>
+        </div>
+      </div>
+    </section>
+
+    <div class="container page-grid">
+
+      <!-- Authentication Card -->
+      <aside id="auth" class="card auth-card">
+        <h3>Register / ចុះឈ្មោះ</h3>
+        <input type="text" id="regName" placeholder="Name / ឈ្មោះ">
+        <input type="text" id="regPhone" placeholder="Phone / លេខទូរស័ព្ទ">
+        <input type="password" id="regPass" placeholder="Password / ពាក្យសម្ងាត់">
+        <button class="btn" id="btn-register">Register / ចុះឈ្មោះ</button>
+
+        <hr>
+
+        <h3>Login / ចូល</h3>
+        <input type="text" id="loginPhone" placeholder="Phone / លេខទូរស័ព្ទ">
+        <input type="password" id="loginPass" placeholder="Password / ពាក្យសម្ងាត់">
+        <button class="btn" id="btn-login">Login / ចូល</button>
+      </aside>
+
+      <!-- Products & Cart -->
+      <section id="shop" class="shop-section">
+        <h2>Menu / មឺនុយ</h2>
+        <div id="products" class="products-grid">
+          <!-- Product cards injected by JS -->
+        </div>
+
+        <div class="cart-panel card" id="cart-panel">
+          <h3>Cart / កន្ត្រក</h3>
+          <div id="cart" class="cart-grid">
+            <!-- Cart items injected by JS -->
+          </div>
+
+          <div class="cart-summary">
+            <div class="total">
+              <span>Subtotal / តម្លៃសរុប:</span>
+              <strong>$<span id="total">0.00</span></strong>
+            </div>
+
+            <div class="cart-actions">
+              <button class="btn secondary" id="btn-clear">Clear Cart / លិច</button>
+              <button class="btn order-btn" id="btn-order">Order Now / បញ្ជាទិញ</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>© <span id="year"></span> Food Khmer — Delivered with ❤️ • ទំនាក់ទំនង: +855 12 345 678</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
