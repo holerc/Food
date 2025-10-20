@@ -85,6 +85,36 @@
     </div>
   </main>
 
+  <div id="payment-modal" class="modal hidden">
+    <div class="modal-content card">
+        <h3><i class="fas fa-qrcode"></i> Scan & Pay / ស្កេនរួចបង់ប្រាក់</h3>
+        <p>សូមមេត្តាបង់ប្រាក់សរុប <strong id="modal-total-display">$0.00</strong> មុននឹងបញ្ជាក់ការបញ្ជាទិញ។</p>
+        
+        <div class="payment-options">
+            <div class="payment-qr">
+                <h4>ABA Bank</h4>
+                <img src="a.jpg" alt="ABA QR Code" class="qr-code">
+            </div>
+            
+            <div class="payment-qr">
+                <h4>ACLEDA Bank (ACE)</h4>
+                <img src="c.jpg" alt="ACLEDA QR Code" class="qr-code">
+            </div>
+        </div>
+
+        <hr style="margin: 1.5rem 0;">
+
+        <h4><i class="fas fa-cloud-upload-alt"></i> Upload Receipt / ផ្ទុកវិក្កយបត្រ</h4>
+        <input type="file" id="payment-receipt-file" accept="image/*, .pdf" required>
+        <p class="small-text" style="color: #e74c3c;">(តម្រូវឲ្យ Upload រូបភាពវិក្កយបត្រទូទាត់ប្រាក់)</p>
+        
+        <div class="modal-actions">
+            <button class="btn primary" id="btn-confirm-order" disabled>Confirm Order / បញ្ជាក់ការបញ្ជាទិញ</button>
+            <button class="btn ghost" id="btn-close-modal">Cancel / បោះបង់</button>
+        </div>
+    </div>
+</div>
+
   <footer class="site-footer">
     <div class="container">
       <p>© <span id="year"></span> Food Khmer — Delivered with ❤️ • ទំនាក់ទំនង: +855 972 425 545</p>

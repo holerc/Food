@@ -1,14 +1,14 @@
 /*
  * Food Khmer - script.js
- * Functionality for Cart, Products, Auth, and Telegram Notification
+ * Functionality for Cart, Products, Auth, and Telegram Notification (NEW: Payment Modal & Invoice Upload)
  */
 
 document.addEventListener('DOMContentLoaded', () => {
     // =================================================================
     // >>>>> ⚠️ កែប្រែតម្លៃខាងក្រោមនេះជាតម្លៃពិតរបស់អ្នក ⚠️ <<<<<
     // =================================================================
-    const TELEGRAM_BOT_TOKEN = '8410825478:AAEmJEjU76FqCIFT-lhgEqBnTXNAAEClJjc'; // ឧទាហរណ៍: 123456789:ABC-DEF-GHI-JKL
-    const TELEGRAM_CHAT_ID = '7176789176';      // ឧទាហរណ៍: -1001234567890 (សម្រាប់ Group) ឬ ID ផ្ទាល់ខ្លួន
+    const TELEGRAM_BOT_TOKEN = '8410825478:AAEmJEjU76FqCIFT-lhgEqBnTXNAAEClJjc'; // Bot Token
+    const TELEGRAM_CHAT_ID = '7176789176';      // Chat ID របស់អ្នក
     // =================================================================
 
     // --- 1. DOM Elements & Initial Data ---
@@ -24,6 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const cartPanel = document.getElementById('cart-panel');
     const logoutBtn = document.getElementById('btn-logout');
 
+    // NEW Modal Elements
+    const paymentModal = document.getElementById('payment-modal');
+    const modalTotalDisplay = document.getElementById('modal-total-display');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const fileInput = document.getElementById('payment-receipt-file');
+    const btnConfirmOrder = document.getElementById('btn-confirm-order');
+
+
     let cart = JSON.parse(localStorage.getItem('foodKhmerCart')) || [];
     let isLoggedIn = JSON.parse(localStorage.getItem('foodKhmerLoggedIn')) || false;
     let products = [];
@@ -36,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 4, name: "Kuy Teav / គុយទាវ", desc: "A hearty noodle soup, usually with pork or beef.", price: 5.50, img: 'https://grantourismotravels.com/wp-content/uploads/2021/10/Cambodian-Kuy-Teav-Recipe-Classic-Chicken-Noodle-Soup-Copyright-2022-Terence-Carter-Grantourismo-T-500x375.jpg' },
         { id: 5, name: "Nom Banh Chok / នំបញ្ចុក", desc: "Khmer rice noodles with a green fish curry sauce.", price: 6.00, img: 'https://grantourismotravels.com/wp-content/uploads/2021/02/Authentic-Nom-Banh-Chok-Recipe-Cambodian-Khmer-Noodles-Copyright-2021-Terence-Carter-Grantourismo.jpg' },
         { id: 6, name: "Mango Sticky Rice / បាយដំណើបស្វាយ", desc: "Sweet dessert with fresh mango and coconut sticky rice.", price: 4.00, img: 'https://www.voyagecambodge.com/cdn/kh-public/bey_dom_neib-MAX-w1000h600.jpg' },
-        { id: 6, name: "Prahok ang chrouch / ប្រហុកអាំងជ្រុញ", desc: "​prahok grilled with herbs", price: 6.00, img: 'https://i.ytimg.com/vi/azgbm0AdfvA/sddefault.jpg' }
+        { id: 7, name: "Prahok ang chrouch / ប្រហុកអាំងជ្រុញ", desc: "​prahok grilled with herbs", price: 6.00, img: 'https://i.ytimg.com/vi/azgbm0AdfvA/sddefault.jpg' }
     ];
 
     // --- 2. Utility Functions ---
@@ -47,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (existingBanner) existingBanner.remove();
 
         const banner = document.createElement('p');
-        banner.className = `welcome-banner welcome-message ${isError ? 'error-banner' : ''}`;
+        // ✅ កែប្រែ: លុប 'welcome-message' ចេញ
+        banner.className = `welcome-banner ${isError ? 'error-banner' : ''}`;
         banner.textContent = message;
         shopSection.prepend(banner);
 
@@ -63,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCartDisplay();
     };
 
-    /** Renders Product Cards */
+    /** Renders Product Cards (UNCHANGED) */
     const renderProducts = (productsToRender) => {
         productsContainer.innerHTML = '';
         productsToRender.forEach(product => {
@@ -105,10 +114,12 @@ document.addEventListener('DOMContentLoaded', () => {
         cart.forEach(item => {
             const itemElement = document.createElement('div');
             itemElement.className = 'cart-item';
+            // ✅ កែប្រែ: ប្រើ display name ដូច Telegram
+            const displayName = item.name.split('/')[0].trim(); 
             itemElement.innerHTML = `
                 <img src="${item.img}" alt="${item.name}">
                 <div class="cart-item-info">
-                    <h5>${item.name}</h5>
+                    <h5>${displayName}</h5>
                     <p class="cart-item-price">$${item.price.toFixed(2)} x ${item.qty} = <strong>$${(item.price * item.qty).toFixed(2)}</strong></p>
                 </div>
                 <div class="cart-item-controls">
@@ -124,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    /** Updates Cart totals and UI */
+    /** Updates Cart totals and UI (UNCHANGED) */
     const updateCartDisplay = () => {
         const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         const count = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -134,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         renderCart();
     };
 
-    /** Toggles Visibility of Sections and sets active nav button */
+    /** Toggles Visibility of Sections and sets active nav button (UNCHANGED) */
     const toggleSections = (targetSection) => {
         // Reset all sections to hidden
         shopSection.classList.add('hidden');
@@ -172,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
         logoutBtn.classList.toggle('hidden', !isLoggedIn);
     };
 
-    // --- 3. Cart Handlers ---
+    // --- 3. Cart Handlers (UNCHANGED) ---
 
     /** Adds a product to the cart */
     const addToCart = (productId, qty = 1) => {
@@ -217,49 +228,81 @@ document.addEventListener('DOMContentLoaded', () => {
         saveCart();
     };
 
-    // --- 4. Order & Telegram Notification ---
+    // --- 4. Order & Telegram Notification (MODIFIED to include receipt info) ---
 
     /** Constructs and sends the order message to Telegram */
-    const sendOrderToTelegram = async (orderItems, totalAmount) => {
-        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID || TELEGRAM_BOT_TOKEN === 'YOUR_BOT_TOKEN_HERE') {
-            console.error("Telegram API is not configured. Please set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID.");
+    const sendOrderToTelegram = async (orderItems, totalAmount, receiptFile) => {
+        if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+            console.error("Telegram API is not configured.");
             return false;
         }
+        
+        const customerName = localStorage.getItem('userName') || 'Guest'; 
+        const customerPhone = localStorage.getItem('userPhone') || 'N/A';
 
+        // 1. Prepare Text Message
         let orderMessage = "🔔 **NEW FOOD ORDER (Food Khmer)**\n\n";
+        orderMessage += `👤 Customer Name: **${customerName}**\n`;
+        orderMessage += `📞 Phone Number: **${customerPhone}**\n`;
         orderMessage += "--- **ITEMS** ---\n";
         
         orderItems.forEach(item => {
             const itemName = item.name.split('/')[0].trim();
             orderMessage += `🍜 ${itemName}\n`;
-            orderMessage += `  - 💰 $${item.price.toFixed(2)} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`;
+            orderMessage += `  - 💰 $${item.price.toFixed(2)} x ${item.qty} = $${(item.price * item.qty).toFixed(2)}\n`;
         });
         
-        orderMessage += "\n--- **SUMMARY** ---\n";
+        orderMessage += "\n--- **SUMMARY & PAYMENT** ---\n";
         orderMessage += `✅ Total Amount: **$${totalAmount.toFixed(2)}**\n`;
-        orderMessage += `👤 Customer (Phone): **${localStorage.getItem('userPhone') || 'Guest'}**\n`;
+        orderMessage += `🧾 Payment Status: **Invoice/Receipt Uploaded!**\n`;
         orderMessage += `⏱ Time: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} ${new Date().toLocaleDateString()}\n`;
-        orderMessage += "\n_Please confirm the order immediately!_";
+        orderMessage += "\n_សូមពិនិត្យមើលវិក្កយបត្រដែលបានភ្ជាប់ដើម្បីបញ្ជាក់ការទូទាត់!_";
 
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
         
+        let success = false;
         try {
-            const response = await fetch(url, {
+            // Send the text order details first
+            const responseText = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     chat_id: TELEGRAM_CHAT_ID,
                     text: orderMessage,
-                    parse_mode: 'Markdown' // Use Markdown for bold/italic formatting
+                    parse_mode: 'Markdown'
                 })
             });
 
-            const result = await response.json();
-            if (result.ok) {
-                console.log("Telegram notification sent successfully!");
-                return true;
+            const resultText = await responseText.json();
+            if (resultText.ok) {
+                success = true;
+                console.log("Telegram text notification sent successfully!");
+
+                // 2. Upload the file (Invoice/Receipt)
+                if (receiptFile) {
+                    const fileUrl = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument`;
+                    const formData = new FormData();
+                    formData.append('chat_id', TELEGRAM_CHAT_ID);
+                    formData.append('document', receiptFile);
+                    formData.append('caption', `🧾 RECEIPT for order from ${customerName}. Total: $${totalAmount.toFixed(2)}`);
+
+                    const responseFile = await fetch(fileUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const resultFile = await responseFile.json();
+                    if (!resultFile.ok) {
+                         console.error("Telegram File Upload Error:", resultFile.description);
+                         showMessage("Order received, but failed to send receipt file!", true);
+                    } else {
+                         console.log("Receipt file sent successfully!");
+                    }
+                }
+                
+                return success;
             } else {
-                console.error("Telegram API Error:", result.description);
+                console.error("Telegram API Error:", resultText.description);
                 return false;
             }
         } catch (error) {
@@ -270,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- 5. Event Listeners ---
 
-    // Product Grid Listener
+    // Product Grid Listener (UNCHANGED)
     productsContainer.addEventListener('click', (e) => {
         const target = e.target;
         if (target.classList.contains('add-btn') || target.classList.contains('quick-add-btn')) {
@@ -280,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Cart Controls Listener
+    // Cart Controls Listener (UNCHANGED)
     cartGrid.addEventListener('click', handleCartControls);
 
     // Order/Clear/Buttons
@@ -292,45 +335,91 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    btnOrder.addEventListener('click', async () => {
+    // OPEN MODAL: When 'Order Now' is clicked, open payment modal
+    btnOrder.addEventListener('click', () => {
         if (cart.length === 0) {
             showMessage("Your cart is empty!", true);
             return;
         }
         
-        // Disable button during processing
-        btnOrder.disabled = true;
+        if (!isLoggedIn) {
+             showMessage("Please Login or Register to place an order!", true);
+             toggleSections('auth');
+             return;
+        }
 
         const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
         
-        // ផ្ញើសារទៅកាន់ Telegram
-        const success = await sendOrderToTelegram(cart, total);
+        // Show Modal and update total display
+        modalTotalDisplay.textContent = `$${total.toFixed(2)}`;
+        paymentModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Disable background scroll
+
+        // Reset file input and disable confirm button
+        fileInput.value = '';
+        btnConfirmOrder.disabled = true;
+    });
+
+    // CLOSE MODAL
+    btnCloseModal.addEventListener('click', () => {
+        paymentModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    });
+    
+    // FILE INPUT CHANGE LISTENER (Enable/Disable Confirm Button)
+    fileInput.addEventListener('change', () => {
+        btnConfirmOrder.disabled = fileInput.files.length === 0;
+    });
+
+    // CONFIRM ORDER (Send to Telegram)
+    btnConfirmOrder.addEventListener('click', async () => {
+        if (!fileInput.files[0]) {
+            alert('Please upload your payment receipt before confirming.');
+            return;
+        }
+
+        btnConfirmOrder.disabled = true;
+        btnOrder.disabled = true; // Disable main button as well
+
+        const total = cart.reduce((sum, item) => sum + (item.price * item.qty), 0);
+        const receiptFile = fileInput.files[0];
+
+        // ផ្ញើសារនិងវិក្កយបត្រទៅកាន់ Telegram
+        const success = await sendOrderToTelegram(cart, total, receiptFile);
 
         if (success) {
             alert(`Order Placed! Total: $${total.toFixed(2)}. Thank you for choosing Food Khmer!`);
             cart = [];
             saveCart();
-            showMessage("Order confirmed! Your order has been sent to our team.", false);
+            showMessage("Order confirmed! Receipt uploaded successfully.", false);
+            paymentModal.classList.add('hidden');
+            document.body.style.overflow = '';
         } else {
             showMessage("Failed to send order notification. Please check Telegram setup.", true);
         }
 
-        // Re-enable button
+        // Re-enable buttons
+        btnConfirmOrder.disabled = false;
         btnOrder.disabled = false;
     });
 
     // --- 6. Navigation & Auth Logic ---
 
-    // Auth Handlers (Basic implementation for UI purpose)
+    // Auth Handlers
     const handleLogin = (e) => {
         const phone = document.getElementById('loginPhone').value;
         const pass = document.getElementById('loginPass').value;
+        
+        const assumedName = localStorage.getItem('userName') || 'Customer'; 
 
         if (phone && pass) {
             isLoggedIn = true;
             localStorage.setItem('foodKhmerLoggedIn', true);
-            localStorage.setItem('userPhone', phone); // Save phone number for order
-            showMessage(`Welcome back! ${phone}`, false);
+            localStorage.setItem('userPhone', phone); 
+            if (!localStorage.getItem('userName')) {
+                localStorage.setItem('userName', assumedName); 
+            }
+            showMessage(`Welcome back, ${assumedName}!`, false);
             toggleSections('menu'); 
         } else {
             showMessage("Please fill in both phone and password.", true);
@@ -344,11 +433,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const pass = document.getElementById('regPass').value;
 
         if (name && phone && pass) {
-            alert(`Registration successful for ${name}. You can now log in using phone: ${phone}`);
+            localStorage.setItem('userName', name);
+            localStorage.setItem('userPhone', phone); 
+            // ✅ កែប្រែ: Log user in immediately after registration
+            isLoggedIn = true; 
+            localStorage.setItem('foodKhmerLoggedIn', true);
+
+            // alert(`Registration successful for ${name}. You can now log in using phone: ${phone}`); // លុប alert នេះចោល
+            
             document.getElementById('regName').value = '';
             document.getElementById('regPhone').value = '';
             document.getElementById('regPass').value = '';
-            showMessage("Registration successful! Please log in.", false);
+            
+            showMessage(`Registration successful! Welcome, ${name}!`, false);
+            toggleSections('menu'); // ✅ ប្តូរទៅ Menu ភ្លាមៗ
         } else {
             showMessage("Please fill in all registration fields.", true);
         }
@@ -361,18 +459,22 @@ document.addEventListener('DOMContentLoaded', () => {
         isLoggedIn = false;
         localStorage.setItem('foodKhmerLoggedIn', false);
         localStorage.removeItem('userPhone');
+        localStorage.removeItem('userName'); 
         showMessage("Logged out successfully.", true);
         toggleSections('auth');
     });
 
 
     // Navigation Logic
-    document.getElementById('btn-home').addEventListener('click', () => toggleSections('auth'));
+    document.getElementById('btn-home').addEventListener('click', () => toggleSections(isLoggedIn ? 'menu' : 'auth')); // ✅ កែប្រែ: បើ Logged In ទៅ Menu
     document.getElementById('btn-menu').addEventListener('click', () => toggleSections('menu'));
     document.getElementById('btn-cart').addEventListener('click', () => toggleSections('cart'));
     document.getElementById('hero-shop').addEventListener('click', () => toggleSections('menu'));
     document.getElementById('hero-auth').addEventListener('click', () => {
-        authCard.scrollIntoView({ behavior: 'smooth' });
+        // ✅ កែប្រែ: បើ Logged In មិនបាច់ Scroll ទេ
+        if (!isLoggedIn) {
+             authCard.scrollIntoView({ behavior: 'smooth' });
+        }
     });
 
 

@@ -637,3 +637,190 @@ p {
         font-size: 0.85rem;
     }
 }
+
+/* --- Modal Styles (For Payment Confirmation) --- */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.85); /* Dark background overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    transition: opacity 0.3s;
+}
+
+.modal.hidden {
+    display: none;
+    opacity: 0;
+}
+
+.modal-content {
+    background-color: var(--color-light);
+    padding: calc(var(--spacing-unit) * 1.5);
+    max-width: 90%;
+    width: 700px;
+    border-radius: var(--radius-sm);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content h3 {
+    color: var(--color-gold);
+    margin-bottom: var(--spacing-sm);
+}
+
+.payment-options {
+    display: flex;
+    gap: var(--spacing-unit);
+    justify-content: center;
+    margin: var(--spacing-unit) 0;
+}
+
+.payment-qr {
+    text-align: center;
+    border: 1px solid #DDD;
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+}
+
+/* ធាតុថ្មី៖ Link សម្រាប់ចុចពង្រីក QR */
+.qr-link {
+    text-decoration: none;
+    color: var(--color-gold);
+    cursor: pointer;
+    display: block;
+    transition: transform 0.2s;
+    border: 1px solid #CCC; 
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-sm);
+}
+
+.qr-link:hover {
+    background-color: #f0f0f0; /* Light hover effect */
+    border-color: var(--color-gold);
+}
+
+.zoom-text {
+    margin-top: 5px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--color-gold);
+}
+
+
+.qr-code {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border: 1px solid var(--color-gold);
+    border-radius: var(--border-radius);
+    margin-top: 0.5rem;
+}
+
+#payment-receipt-file {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding: 10px;
+    width: 100%;
+    border: 1px dashed #CCC;
+    border-radius: var(--border-radius);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-unit);
+}
+
+.modal-actions .btn {
+    flex-grow: 1;
+}
+
+/* Responsive adjustment for payment options */
+@media (max-width: 600px) {
+    .payment-options {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    .payment-qr {
+        width: 100%;
+    }
+    .qr-code {
+        width: 100px; 
+        height: 100px;
+    }
+}
+
+/* ----------------------------------------------- */
+/* --- NEW: QR Zoom Lightbox Styles (Target CSS) --- */
+/* ----------------------------------------------- */
+
+/* Lightbox Container: Hides by default */
+.lightbox-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95); /* Darker background overlay */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000; /* ត្រូវតែខ្ពស់ជាង payment-modal (2000) */
+    opacity: 0;
+    pointer-events: none; /* Disable interaction when hidden */
+    transition: opacity 0.3s ease;
+}
+
+/* Lightbox Visibility Control (Using :target to show when link is clicked) */
+.lightbox-modal:target {
+    opacity: 1;
+    pointer-events: auto; /* Enable interaction when visible */
+}
+
+/* Lightbox Content */
+.lightbox-content {
+    background-color: var(--color-white);
+    padding: 20px;
+    border-radius: var(--radius-sm);
+    max-width: 90%;
+    max-height: 90%;
+    width: 400px; /* កំណត់ទំហំធំល្មមសម្រាប់ QR */
+    text-align: center;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.lightbox-modal:target .lightbox-content {
+    transform: scale(1); /* Zoom in effect */
+}
+
+.lightbox-img {
+    width: 100%; 
+    height: auto;
+    max-width: 350px; /* ទំហំធំបំផុតរបស់រូបភាព QR */
+    object-fit: contain;
+    margin: 10px 0;
+    border: 5px solid var(--color-gold);
+}
+
+.lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    color: #FFF;
+    font-size: 40px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 1;
+    transition: color 0.2s;
+}
+
+.lightbox-close:hover {
+    color: var(--color-gold);
+}
