@@ -125,7 +125,7 @@ html, body {
 .hero-overlay {
   position: relative;
   padding: 36px;
-  color: white;
+  color: rgb(0, 0, 0);
   text-align: center;
   animation: fadeIn 1s ease forwards;
 }
@@ -173,7 +173,7 @@ html, body {
 }
 
 .btn.primary {
-  background: linear-gradient(90deg, var(--primary-blue), #3b82f6);
+  background: linear-gradient(90deg, var(--primary-blue), #0062ff);
   color: white;
 }
 
