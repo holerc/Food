@@ -241,10 +241,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const customerPhone = localStorage.getItem('userPhone') || 'N/A';
 
         // 1. Prepare Text Message
-        let orderMessage = "🔔 **NEW FOOD ORDER (Food Khmer)**\n\n";
-        orderMessage += `👤 Customer Name: **${customerName}**\n`;
-        orderMessage += `📞 Phone Number: **${customerPhone}**\n`;
-        orderMessage += "--- **ITEMS** ---\n";
+        let orderMessage = "🔔 **ការបញ្ជាទិញថ្មី**\n\n";
+        orderMessage += `👤 ឈ្មោះអ្នកបញ្ជាទិញ: **${customerName}**\n`;
+        orderMessage += `📞 លេខទូរស័ព្ទ: **${customerPhone}**\n`;
+        orderMessage += "--- **ផលិតផល** ---\n";
         
         orderItems.forEach(item => {
             const itemName = item.name.split('/')[0].trim();
@@ -253,9 +253,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         orderMessage += "\n--- **SUMMARY & PAYMENT** ---\n";
-        orderMessage += `✅ Total Amount: **$${totalAmount.toFixed(2)}**\n`;
-        orderMessage += `🧾 Payment Status: **Invoice/Receipt Uploaded!**\n`;
-        orderMessage += `⏱ Time: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} ${new Date().toLocaleDateString()}\n`;
+        orderMessage += `✅ តម្លៃសរុប: **$${totalAmount.toFixed(2)}**\n`;
+        orderMessage += `🧾 ស្ថានភាពការទូទាត់: **វិក្កយបត្រ/សំបុត្របានផ្ទុកឡើង!**\n`;
+        orderMessage += `⏱ ពេលវេលា: ${new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} ${new Date().toLocaleDateString()}\n`;
         orderMessage += "\n_សូមពិនិត្យមើលវិក្កយបត្រដែលបានភ្ជាប់ដើម្បីបញ្ជាក់ការទូទាត់!_";
 
         const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
